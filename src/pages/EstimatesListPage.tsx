@@ -18,13 +18,13 @@ export function EstimatesListPage() {
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);
 
-  const load = async () => {
-    const response = await estimatesService.listEstimates({ query: search, pageSize: 50 });
-    setEstimates(response.data);
-    setCustomers(getTable('customers'));
-  };
-
-  useEffect(() => { void load(); }, [search]);
+  useEffect(() => {
+    void (async () => {
+      const response = await estimatesService.listEstimates({ query: search, pageSize: 50 });
+      setEstimates(response.data);
+      setCustomers(getTable('customers'));
+    })();
+  }, [search]);
 
   return (
     <div className="space-y-6">
@@ -66,7 +66,9 @@ export function EstimatesListPage() {
             });
             showToast({ title: 'Estimate created', description: 'Estimate is ready for review or sending.', type: 'success' });
             setOpen(false);
-            await load();
+            const response = await estimatesService.listEstimates({ query: search, pageSize: 50 });
+            setEstimates(response.data);
+            setCustomers(getTable('customers'));
           }}
         />
       </Modal>

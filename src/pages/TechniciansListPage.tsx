@@ -5,7 +5,7 @@ import { CardGrid } from '@/components/layout/CardGrid';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { Modal } from '@/components/ui/Modal';
 import { techniciansService } from '@/services/technicians';
 import { useToastContext } from '@/context/ToastContext';
@@ -16,12 +16,12 @@ export function TechniciansListPage() {
   const [technicians, setTechnicians] = useState<Technician[]>([]);
   const [open, setOpen] = useState(false);
 
-  const load = async () => {
-    const response = await techniciansService.listTechnicians({ pageSize: 50 });
-    setTechnicians(response.data);
-  };
-
-  useEffect(() => { void load(); }, []);
+  useEffect(() => {
+    void (async () => {
+      const response = await techniciansService.listTechnicians({ pageSize: 50 });
+      setTechnicians(response.data);
+    })();
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -72,7 +72,8 @@ export function TechniciansListPage() {
             });
             showToast({ title: 'Technician created', description: 'Field technician added to roster.', type: 'success' });
             setOpen(false);
-            await load();
+            const response = await techniciansService.listTechnicians({ pageSize: 50 });
+            setTechnicians(response.data);
           }}
         />
       </Modal>

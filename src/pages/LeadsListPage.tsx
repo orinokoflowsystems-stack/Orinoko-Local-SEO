@@ -22,13 +22,13 @@ export function LeadsListPage() {
   const [view, setView] = useState('kanban');
   const [open, setOpen] = useState(false);
 
-  const load = async () => {
-    const response = await leadsService.listLeads({ query: search, pageSize: 50 });
-    setLeads(response.data);
-    setStages(getTable('pipelineStages'));
-  };
-
-  useEffect(() => { void load(); }, [search]);
+  useEffect(() => {
+    void (async () => {
+      const response = await leadsService.listLeads({ query: search, pageSize: 50 });
+      setLeads(response.data);
+      setStages(getTable('pipelineStages'));
+    })();
+  }, [search]);
 
   const grouped = useMemo(() => stages.map((stage) => ({ stage, leads: leads.filter((lead) => lead.pipelineStageId === stage.id) })), [leads, stages]);
 
@@ -116,7 +116,9 @@ export function LeadsListPage() {
             });
             showToast({ title: 'Lead created', description: 'The new lead was added to the pipeline.', type: 'success' });
             setOpen(false);
-            await load();
+            const response = await leadsService.listLeads({ query: search, pageSize: 50 });
+            setLeads(response.data);
+            setStages(getTable('pipelineStages'));
           }}
         />
       </Modal>

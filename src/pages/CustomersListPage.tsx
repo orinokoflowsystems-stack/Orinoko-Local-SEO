@@ -20,12 +20,12 @@ export function CustomersListPage() {
   const [view, setView] = useState('table');
   const [open, setOpen] = useState(false);
 
-  const load = async () => {
-    const response = await customersService.listCustomers({ query: search, pageSize: 50 });
-    setCustomers(response.data);
-  };
-
-  useEffect(() => { void load(); }, [search]);
+  useEffect(() => {
+    void (async () => {
+      const response = await customersService.listCustomers({ query: search, pageSize: 50 });
+      setCustomers(response.data);
+    })();
+  }, [search]);
 
   return (
     <div className="space-y-6">
@@ -87,7 +87,8 @@ export function CustomersListPage() {
             });
             showToast({ title: 'Customer created', description: 'New customer record saved.', type: 'success' });
             setOpen(false);
-            await load();
+            const response = await customersService.listCustomers({ query: search, pageSize: 50 });
+            setCustomers(response.data);
           }}
         />
       </Modal>

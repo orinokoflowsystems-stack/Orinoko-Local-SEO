@@ -19,14 +19,14 @@ export function JobsListPage() {
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);
 
-  const load = async () => {
-    const response = await jobsService.listJobs({ query: search, pageSize: 50 });
-    setJobs(response.data);
-    setCustomers(getTable('customers'));
-    setTechnicians(getTable('technicians'));
-  };
-
-  useEffect(() => { void load(); }, [search]);
+  useEffect(() => {
+    void (async () => {
+      const response = await jobsService.listJobs({ query: search, pageSize: 50 });
+      setJobs(response.data);
+      setCustomers(getTable('customers'));
+      setTechnicians(getTable('technicians'));
+    })();
+  }, [search]);
 
   return (
     <div className="space-y-6">
@@ -73,7 +73,10 @@ export function JobsListPage() {
             });
             showToast({ title: 'Job created', description: 'Work order added to schedule.', type: 'success' });
             setOpen(false);
-            await load();
+            const response = await jobsService.listJobs({ query: search, pageSize: 50 });
+            setJobs(response.data);
+            setCustomers(getTable('customers'));
+            setTechnicians(getTable('technicians'));
           }}
         />
       </Modal>

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { useAuthContext } from './AuthContext';

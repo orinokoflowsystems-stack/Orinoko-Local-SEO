@@ -41,7 +41,7 @@ async function request<T>(path: string, init: RequestInit): Promise<ServiceRespo
       ...init,
       headers: {
         apikey: SUPABASE_KEY,
-        Authorization: `****** ?? SUPABASE_KEY}`,
+        Authorization: 'Bearer ' + (session?.accessToken ?? SUPABASE_KEY),
         'Content-Type': 'application/json',
         ...(init.headers ?? {}),
       },

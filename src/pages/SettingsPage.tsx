@@ -9,7 +9,6 @@ import { Modal } from '@/components/ui/Modal';
 import { Tabs } from '@/components/ui/Tabs';
 import { organizationsService } from '@/services/organizations';
 import { serviceCatalogService } from '@/services/services';
-import { usersService } from '@/services/users';
 import { getTable, resetDatabase } from '@/services/storage';
 import { useAuth } from '@/hooks/useAuth';
 import { useToastContext } from '@/context/ToastContext';
@@ -26,17 +25,17 @@ export function SettingsPage() {
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
   const [open, setOpen] = useState(false);
 
-  const load = async () => {
-    if (organization) {
-      setOrgProfile(await organizationsService.getProfile(organization.id));
-    }
-    setUsers(getTable('users'));
-    setRoles(getTable('roles'));
-    setServices(getTable('services'));
-    setCategories(getTable('serviceCategories'));
-  };
-
-  useEffect(() => { void load(); }, [organization]);
+  useEffect(() => {
+    void (async () => {
+      if (organization) {
+        setOrgProfile(await organizationsService.getProfile(organization.id));
+      }
+      setUsers(getTable('users'));
+      setRoles(getTable('roles'));
+      setServices(getTable('services'));
+      setCategories(getTable('serviceCategories'));
+    })();
+  }, [organization]);
 
   return (
     <div className="space-y-6">
@@ -62,7 +61,15 @@ export function SettingsPage() {
               <Button variant="danger" onClick={() => {
                 resetDatabase();
                 showToast({ title: 'Demo data reset', description: 'The demo workspace was restored.', type: 'warning' });
-                void load();
+                void (async () => {
+                  if (organization) {
+                    setOrgProfile(await organizationsService.getProfile(organization.id));
+                  }
+                  setUsers(getTable('users'));
+                  setRoles(getTable('roles'));
+                  setServices(getTable('services'));
+                  setCategories(getTable('serviceCategories'));
+                })();
               }}>Reset demo data</Button>
             </div>
           </CardBody>
@@ -108,7 +115,13 @@ export function SettingsPage() {
             });
             showToast({ title: 'Service added', description: 'Catalog entry created successfully.', type: 'success' });
             setOpen(false);
-            await load();
+            if (organization) {
+              setOrgProfile(await organizationsService.getProfile(organization.id));
+            }
+            setUsers(getTable('users'));
+            setRoles(getTable('roles'));
+            setServices(getTable('services'));
+            setCategories(getTable('serviceCategories'));
           }}
         />
       </Modal>

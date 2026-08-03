@@ -21,15 +21,15 @@ export function CalendarPage() {
   const [view, setView] = useState('week');
   const [open, setOpen] = useState(false);
 
-  const load = async () => {
-    const response = await appointmentsService.listAppointments({ pageSize: 50 });
-    setAppointments(response.data);
-    setCustomers(getTable('customers'));
-    setServices(getTable('services'));
-    setTechnicians(getTable('technicians'));
-  };
-
-  useEffect(() => { void load(); }, []);
+  useEffect(() => {
+    void (async () => {
+      const response = await appointmentsService.listAppointments({ pageSize: 50 });
+      setAppointments(response.data);
+      setCustomers(getTable('customers'));
+      setServices(getTable('services'));
+      setTechnicians(getTable('technicians'));
+    })();
+  }, []);
 
   const filtered = useMemo(() => {
     if (view === 'day') {
@@ -92,7 +92,11 @@ export function CalendarPage() {
             });
             showToast({ title: 'Appointment scheduled', description: 'New appointment added to calendar.', type: 'success' });
             setOpen(false);
-            await load();
+            const response = await appointmentsService.listAppointments({ pageSize: 50 });
+            setAppointments(response.data);
+            setCustomers(getTable('customers'));
+            setServices(getTable('services'));
+            setTechnicians(getTable('technicians'));
           }}
         />
       </Modal>
