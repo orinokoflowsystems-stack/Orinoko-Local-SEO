@@ -12,6 +12,31 @@ import type {
 const STORAGE_KEY = 'orinoko-appsaas-mvp-db';
 const SESSION_KEY = 'orinoko-appsaas-session';
 
+/**
+ * SECURITY NOTICE: Demo Storage Service
+ * 
+ * This storage service uses localStorage for demo/development purposes only.
+ * 
+ * ⚠️ PRODUCTION SECURITY WARNINGS:
+ * 1. localStorage is NOT encrypted and should NOT store sensitive data in production
+ * 2. Session tokens (JWT/auth) should be stored in httpOnly, secure cookies instead
+ * 3. Customer/client data should be encrypted at rest and in transit
+ * 4. Use Supabase Auth (with httpOnly cookies) instead of custom localStorage sessions
+ * 5. All API calls should verify organization_id server-side via Row Level Security
+ * 
+ * This storage module is a temporary demo layer that will be replaced with
+ * real Supabase API calls in production. It demonstrates the data structure
+ * but does NOT provide production-grade security.
+ * 
+ * When deploying to production:
+ * - Remove this storage service
+ * - Connect directly to Supabase client library
+ * - Use Supabase Auth for session management
+ * - Implement httpOnly cookies for tokens
+ * - Enable HTTPS everywhere
+ * - Enable Content Security Policy headers
+ */
+
 function hasWindow() {
   return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 }
@@ -21,6 +46,8 @@ export function clone<T>(value: T): T {
 }
 
 export function getDatabase(): AppDatabase {
+  // DEMO ONLY: In production, connect directly to Supabase API instead of localStorage.
+  // This provides real-time sync, encryption at rest, backups, and Row Level Security.
   if (!hasWindow()) {
     return clone(demoDatabase);
   }
@@ -40,6 +67,7 @@ export function getDatabase(): AppDatabase {
 }
 
 export function setDatabase(database: AppDatabase) {
+  // DEMO ONLY: In production, use Supabase API to persist data securely.
   if (!hasWindow()) {
     return;
   }
@@ -51,6 +79,8 @@ export function resetDatabase() {
 }
 
 export function getStoredSession() {
+  // DEMO ONLY: In production, use Supabase Auth which handles session storage
+  // securely with httpOnly cookies. Never store auth tokens in localStorage.
   if (!hasWindow()) {
     return null;
   }
@@ -68,6 +98,8 @@ export function getStoredSession() {
 }
 
 export function setStoredSession(session: { accessToken: string; refreshToken: string; expiresAt: string; userId: string; organizationId: string } | null) {
+  // DEMO ONLY: In production, Supabase Auth stores tokens in httpOnly cookies automatically.
+  // This localStorage approach is for demo purposes only and should be removed in production.
   if (!hasWindow()) {
     return;
   }
