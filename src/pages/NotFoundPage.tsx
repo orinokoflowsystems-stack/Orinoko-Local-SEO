@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/Button';
 
 export function NotFoundPage() {
   return (
@@ -8,7 +7,7 @@ export function NotFoundPage() {
         <p className="text-sm uppercase tracking-[0.4em] text-accent-300">404</p>
         <h1 className="mt-4 text-4xl font-semibold">Route not found</h1>
         <p className="mt-3 text-sm leading-7 text-slate-300">The page does not exist or your role cannot access it. Return to the operations dashboard.</p>
-        <Button className="mt-6" asChild={false}><Link to="/">Go to dashboard</Link></Button>
+        <Link to="/" className="mt-6 inline-flex rounded-xl bg-brand-700 px-5 py-3 text-sm font-medium text-white transition hover:bg-brand-600">Go to dashboard</Link>
       </div>
     </main>
   );

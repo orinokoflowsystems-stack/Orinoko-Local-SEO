@@ -1,12 +1,12 @@
 import { ArrowDownAZ, ArrowUpAZ } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { cn } from '@/utils/cn';
 
 export interface TableColumn<T> {
   id: string;
   header: string;
   accessor?: keyof T;
-  cell?: (row: T) => React.ReactNode;
+  cell?: (row: T) => ReactNode;
   sortable?: boolean;
   className?: string;
 }

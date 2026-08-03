@@ -37,7 +37,7 @@ export function SignUpPage() {
       case 2:
         return Boolean(form.organizationName);
       default:
-        return True;
+        return true;
     }
   }, [form, step]);
 

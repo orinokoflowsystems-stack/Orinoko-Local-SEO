@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
@@ -12,7 +12,7 @@ export function PasswordResetPage() {
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     const result = await resetPassword(email);
     setMessage(result.message);

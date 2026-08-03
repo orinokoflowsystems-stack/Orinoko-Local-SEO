@@ -9,12 +9,9 @@ const variants = {
   info: 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300',
 } as const;
 
-export function Badge({ className, children, ...props }: HTMLAttributes<HTMLSpanElement> & { variant?: keyof typeof variants }) {
-  const variant = (props as { variant?: keyof typeof variants }).variant ?? 'default';
-  const { variant: _variant, ...rest } = props as HTMLAttributes<HTMLSpanElement> & { variant?: keyof typeof variants };
-
+export function Badge({ className, children, variant = 'default', ...props }: HTMLAttributes<HTMLSpanElement> & { variant?: keyof typeof variants }) {
   return (
-    <span className={cn('inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium', variants[variant], className)} {...rest}>
+    <span className={cn('inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium', variants[variant], className)} {...props}>
       {children}
     </span>
   );
