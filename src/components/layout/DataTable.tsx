@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/Input';
 import { Pagination } from '@/components/ui/Pagination';
 import { Table, type TableColumn } from '@/components/ui/Table';
 
-interface DataTableProps<T extends Record<string, unknown>> {
+interface DataTableProps<T extends object> {
   title?: string;
   data: T[];
   columns: TableColumn<T>[];
@@ -16,7 +16,7 @@ interface DataTableProps<T extends Record<string, unknown>> {
   actions?: ReactNode;
 }
 
-export function DataTable<T extends Record<string, unknown>>({
+export function DataTable<T extends object>({
   actions,
   columns,
   data,

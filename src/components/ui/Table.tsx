@@ -11,14 +11,14 @@ export interface TableColumn<T> {
   className?: string;
 }
 
-interface TableProps<T> {
+interface TableProps<T extends object> {
   columns: TableColumn<T>[];
   data: T[];
   rowKey: (row: T) => string;
   filterText?: string;
 }
 
-export function Table<T extends Record<string, unknown>>({ columns, data, filterText, rowKey }: TableProps<T>) {
+export function Table<T extends object>({ columns, data, filterText, rowKey }: TableProps<T>) {
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
@@ -27,7 +27,7 @@ export function Table<T extends Record<string, unknown>>({ columns, data, filter
     const searched = !normalized
       ? data
       : data.filter((row) =>
-          Object.values(row).some((value) => String(value ?? '').toLowerCase().includes(normalized)),
+          Object.values(row as Record<string, unknown>).some((value) => String(value ?? '').toLowerCase().includes(normalized)),
         );
 
     if (!sortBy) return searched;
@@ -35,8 +35,9 @@ export function Table<T extends Record<string, unknown>>({ columns, data, filter
     if (!column?.accessor) return searched;
 
     return [...searched].sort((left, right) => {
-      const leftValue = left[column.accessor];
-      const rightValue = right[column.accessor];
+      const accessor = column.accessor as keyof T;
+      const leftValue = left[accessor];
+      const rightValue = right[accessor];
       if (leftValue === rightValue) return 0;
       if (leftValue === undefined || leftValue === null) return 1;
       if (rightValue === undefined || rightValue === null) return -1;
@@ -82,7 +83,7 @@ export function Table<T extends Record<string, unknown>>({ columns, data, filter
               <tr key={rowKey(row)} className="hover:bg-slate-50 dark:hover:bg-slate-800/60">
                 {columns.map((column) => (
                   <td key={column.id} className={cn('px-4 py-3 align-top text-slate-700 dark:text-slate-200', column.className)}>
-                    {column.cell ? column.cell(row) : column.accessor ? String(row[column.accessor] ?? '-') : null}
+                    {column.cell ? column.cell(row) : column.accessor ? String((row as Record<string, unknown>)[String(column.accessor)] ?? '-') : null}
                   </td>
                 ))}
               </tr>

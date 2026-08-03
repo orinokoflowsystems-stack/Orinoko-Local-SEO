@@ -79,7 +79,7 @@ class TableClient<K extends DatabaseTableName> {
       if (!network.error && network.data) {
         const data = network.data;
         const page = options.page ?? 1;
-        const pageSize = options.pageSize ?? data.length || 10;
+        const pageSize = options.pageSize ?? (data.length || 10);
         return {
           data: {
             data,

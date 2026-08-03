@@ -39,7 +39,7 @@ export function InvoiceDetailPage() {
         <DetailCard title="Payment actions">
           <div className="flex flex-wrap gap-3">
             <Button onClick={() => void updateStatus('issued')}>Mark issued</Button>
-            <Button variant="secondary" onClick={() => void invoicesService.recordPayment(invoice.id, { id: createId('payment'), organizationId: invoice.organizationId, invoiceId: invoice.id, amount: invoice.balanceDue || invoice.total, method: 'card', status: 'completed', paidAt: new Date().toISOString(), createdBy: 'user-owner' }).then(setInvoice)}>Record payment</Button>
+            <Button variant="secondary" onClick={() => void invoicesService.recordPayment(invoice.id, { id: createId('payment'), organizationId: invoice.organizationId, invoiceId: invoice.id, amount: invoice.balanceDue || invoice.total, method: 'card', status: 'completed', paidAt: new Date().toISOString(), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), createdBy: 'user-owner' }).then(setInvoice)}>Record payment</Button>
             <Button variant="danger" onClick={() => void updateStatus('void')}>Void invoice</Button>
           </div>
         </DetailCard>

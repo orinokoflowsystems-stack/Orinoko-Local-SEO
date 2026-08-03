@@ -9,6 +9,7 @@ import type {
   Estimate,
   Integration,
   Invoice,
+  Job,
   Lead,
   LeadSource,
   Message,
@@ -16,6 +17,7 @@ import type {
   Organization,
   Payment,
   Permission,
+  PermissionCode,
   PipelineStage,
   Review,
   Role,
@@ -68,7 +70,7 @@ export const demoOrganization: Organization = {
   createdBy: ownerUserId,
 };
 
-export const permissions: Permission[] = [
+const permissionSeed: Array<[PermissionCode, string, string, string]> = [
   ['dashboard.view', 'View dashboard', 'View KPI dashboards', 'dashboard'],
   ['leads.view', 'View leads', 'View leads pipeline', 'leads'],
   ['leads.manage', 'Manage leads', 'Create and update leads', 'leads'],
@@ -86,7 +88,9 @@ export const permissions: Permission[] = [
   ['invoices.manage', 'Manage invoices', 'Manage invoices', 'invoices'],
   ['settings.view', 'View settings', 'View settings', 'settings'],
   ['settings.manage', 'Manage settings', 'Manage settings', 'settings'],
-].map(([code, name, description, module], index) => ({
+];
+
+export const permissions: Permission[] = permissionSeed.map(([code, name, description, module], index) => ({
   id: `perm-${index + 1}`,
   code,
   name,
@@ -141,7 +145,9 @@ export const roles: Role[] = [
     key: 'technician',
     name: 'Technician',
     description: 'Field operations access',
-    permissionCodes: permissionCodes.filter((code) => !code.startsWith('settings') && !code.endsWith('manage')),
+    permissionCodes: permissionCodes.filter(
+      (code) => !code.startsWith('settings') && !code.endsWith('manage'),
+    ),
     isSystemRole: true,
     createdAt: iso(-200),
     updatedAt: iso(-10),
@@ -194,7 +200,9 @@ export const users: User[] = [
     lastName: 'Howard',
     phone: '(813) 555-0103',
     isActive: true,
-    permissions: permissionCodes.filter((code) => !code.endsWith('manage') && !code.startsWith('settings')),
+    permissions: permissionCodes.filter(
+      (code) => !code.endsWith('manage') && !code.startsWith('settings'),
+    ),
     lastLoginAt: iso(-1, -5),
     isDemo: true,
     createdAt: iso(-150),
@@ -211,7 +219,9 @@ export const users: User[] = [
     lastName: 'Stone',
     phone: '(813) 555-0104',
     isActive: true,
-    permissions: permissionCodes.filter((code) => !code.endsWith('manage') && !code.startsWith('settings')),
+    permissions: permissionCodes.filter(
+      (code) => !code.endsWith('manage') && !code.startsWith('settings'),
+    ),
     lastLoginAt: iso(-1, -3),
     isDemo: true,
     createdAt: iso(-140),
@@ -228,7 +238,9 @@ export const users: User[] = [
     lastName: 'Patel',
     phone: '(813) 555-0105',
     isActive: true,
-    permissions: permissionCodes.filter((code) => !code.endsWith('manage') && !code.startsWith('settings')),
+    permissions: permissionCodes.filter(
+      (code) => !code.endsWith('manage') && !code.startsWith('settings'),
+    ),
     lastLoginAt: iso(-3),
     isDemo: true,
     createdAt: iso(-130),
@@ -277,7 +289,7 @@ const pipelineNames = [
   'Payment Pending',
   'Closed',
   'Lost',
-];
+] as const;
 
 export const pipelineStages: PipelineStage[] = pipelineNames.map((name, index) => ({
   id: `stage-${index + 1}`,
@@ -305,7 +317,7 @@ export const serviceCategories: ServiceCategory[] = [
   createdBy: ownerUserId,
 }));
 
-export const services: Service[] = [
+const serviceSeed: Array<[string, string, string, string, string, number, number]> = [
   ['service-1', 'category-glass', 'Glass Services', 'Residential window glass repair', 'Single and double pane glass replacement', 245, 120],
   ['service-2', 'category-glass', 'Glass Services', 'Storefront glass replacement', 'Tempered storefront panel replacement', 890, 240],
   ['service-3', 'category-door', 'Door Services', 'Sliding door roller repair', 'Track alignment and roller replacement', 315, 90],
@@ -314,85 +326,134 @@ export const services: Service[] = [
   ['service-6', 'category-glass', 'Glass Services', 'Shower enclosure install', 'Frameless shower glass enclosure install', 2200, 420],
   ['service-7', 'category-emergency', 'Emergency', 'Board-up emergency response', 'After-hours glass board-up service', 450, 60],
   ['service-8', 'category-emergency', 'Emergency', 'Broken door security repair', 'Emergency lock and frame stabilization', 510, 75],
-].map(([id, categoryId, categoryName, name, description, basePrice, estimatedDurationMinutes]) => ({
-  id,
-  organizationId,
-  categoryId,
-  categoryName,
-  name,
-  description,
-  basePrice,
-  estimatedDurationMinutes,
-  isActive: true,
-  isDemo: true,
-  createdAt: iso(-95),
-  updatedAt: iso(-7),
-  createdBy: ownerUserId,
-}));
+];
 
-export const customers: Customer[] = [
+export const services: Service[] = serviceSeed.map(
+  ([id, categoryId, categoryName, name, description, basePrice, estimatedDurationMinutes]) => ({
+    id,
+    organizationId,
+    categoryId,
+    categoryName,
+    name,
+    description,
+    basePrice,
+    estimatedDurationMinutes,
+    isActive: true,
+    isDemo: true,
+    createdAt: iso(-95),
+    updatedAt: iso(-7),
+    createdBy: ownerUserId,
+  }),
+);
+
+const customerSeed: Array<[
+  string,
+  string,
+  string,
+  string,
+  string,
+  Customer['type'],
+  Customer['preferredContact'],
+  number,
+  number,
+  string,
+]> = [
   ['customer-1', 'Ethan', 'Brooks', 'ethan@example.com', '(813) 555-1001', 'residential', 'phone', 1240, 2, 'Window replacement customer'],
   ['customer-2', 'Sophia', 'Martinez', 'sophia@example.com', '(813) 555-1002', 'commercial', 'email', 8420, 5, 'Owns marina storefront'],
   ['customer-3', 'Liam', 'Nguyen', 'liam@example.com', '(813) 555-1003', 'residential', 'sms', 980, 1, 'Patio slider issue'],
   ['customer-4', 'Ava', 'Johnson', 'ava@example.com', '(813) 555-1004', 'commercial', 'phone', 6230, 4, 'Apartment maintenance manager'],
   ['customer-5', 'Mason', 'Clark', 'mason@example.com', '(813) 555-1005', 'residential', 'email', 4120, 3, 'Repeat shower enclosure client'],
-].map(([id, firstName, lastName, email, phone, type, preferredContact, totalSpent, jobsCompleted, notes], index) => ({
-  id,
-  organizationId,
-  firstName,
-  lastName,
-  email,
-  phone,
-  companyName: type === 'commercial' ? `${lastName} Properties` : undefined,
-  address: {
-    street: `${110 + index * 17} Bayshore Blvd`,
-    city: 'Tampa',
-    state: 'FL',
-    postalCode: `3360${index + 1}`,
-    country: 'USA',
-  },
-  type,
-  preferredContact,
-  totalSpent,
-  jobsCompleted,
-  notes,
-  tags: type === 'commercial' ? ['priority', 'commercial'] : ['residential'],
-  isDemo: true,
-  createdAt: iso(-90 + index),
-  updatedAt: iso(-index),
-  createdBy: ownerUserId,
-}));
+];
 
-export const technicians: Technician[] = [
+export const customers: Customer[] = customerSeed.map(
+  ([id, firstName, lastName, email, phone, type, preferredContact, totalSpent, jobsCompleted, notes], index) => ({
+    id,
+    organizationId,
+    firstName,
+    lastName,
+    email,
+    phone,
+    companyName: type === 'commercial' ? `${lastName} Properties` : undefined,
+    address: {
+      street: `${110 + index * 17} Bayshore Blvd`,
+      city: 'Tampa',
+      state: 'FL',
+      postalCode: `3360${index + 1}`,
+      country: 'USA',
+    },
+    type,
+    preferredContact,
+    totalSpent,
+    jobsCompleted,
+    notes,
+    tags: type === 'commercial' ? ['priority', 'commercial'] : ['residential'],
+    isDemo: true,
+    createdAt: iso(-90 + index),
+    updatedAt: iso(-index),
+    createdBy: ownerUserId,
+  }),
+);
+
+const technicianSeed: Array<[
+  string,
+  string,
+  string,
+  string,
+  string,
+  string[],
+  string[],
+  string,
+  number,
+  number,
+  number,
+  number,
+  Technician['status'],
+]> = [
   ['tech-1', 'user-tech-1', 'James', 'Howard', 'james@handyglassdoor.com', ['Glass repair', 'Board-up'], ['OSHA 10'], 'North Tampa', 55, 72, 4.9, 82, 'on_job'],
   ['tech-2', 'user-tech-2', 'Amelia', 'Stone', 'amelia@handyglassdoor.com', ['Doors', 'Commercial installs'], ['ADA installation'], 'Tampa Bay', 60, 58, 4.8, 64, 'scheduled'],
   ['tech-3', 'user-tech-3', 'Noah', 'Patel', 'noah@handyglassdoor.com', ['Showers', 'Residential installs'], ['Tempered glass handling'], 'St. Petersburg', 52, 41, 4.7, 51, 'available'],
-].map(([id, userId, firstName, lastName, email, specialties, certifications, territory, hourlyRate, workloadPercent, averageRating, totalJobs, status]) => ({
-  id,
-  organizationId,
-  userId,
-  firstName,
-  lastName,
-  email,
-  phone: '(813) 555-1100',
-  specialties,
-  certifications,
-  territory,
-  serviceAreaRadiusMiles: 35,
-  hourlyRate,
-  workloadPercent,
-  averageRating,
-  totalJobs,
-  isActive: true,
-  isAvailable: status !== 'off_duty',
-  status,
-  isDemo: true,
-  createdAt: iso(-120),
-  updatedAt: iso(-1),
-  createdBy: ownerUserId,
-}));
+];
 
-export const leads: Lead[] = [
+export const technicians: Technician[] = technicianSeed.map(
+  ([id, userId, firstName, lastName, email, specialties, certifications, territory, hourlyRate, workloadPercent, averageRating, totalJobs, status]) => ({
+    id,
+    organizationId,
+    userId,
+    firstName,
+    lastName,
+    email,
+    phone: '(813) 555-1100',
+    specialties,
+    certifications,
+    territory,
+    serviceAreaRadiusMiles: 35,
+    hourlyRate,
+    workloadPercent,
+    averageRating,
+    totalJobs,
+    isActive: true,
+    isAvailable: status !== 'off_duty',
+    status,
+    isDemo: true,
+    createdAt: iso(-120),
+    updatedAt: iso(-1),
+    createdBy: ownerUserId,
+  }),
+);
+
+const leadSeed: Array<[
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  Lead['status'],
+  Lead['priority'],
+  string,
+]> = [
   ['lead-1', 'Olive', 'Bennet', 'olive@example.com', '(813) 555-2001', 'Website Form', 'stage-1', 'New Lead', 'new', 'urgent', 'Storefront glass replacement'],
   ['lead-2', 'Jackson', 'Reed', 'jackson@example.com', '(813) 555-2002', 'Phone Call', 'stage-2', 'Contacted', 'contacted', 'high', 'Emergency board-up'],
   ['lead-3', 'Harper', 'Flores', 'harper@example.com', '(813) 555-2003', 'Google Business Profile', 'stage-3', 'Appointment Scheduled', 'appointment_scheduled', 'normal', 'Patio door adjustment'],
@@ -403,39 +464,43 @@ export const leads: Lead[] = [
   ['lead-8', 'Leo', 'Ward', 'leo@example.com', '(813) 555-2008', 'Referral', 'stage-8', 'Completed', 'completed', 'normal', 'Board-up service'],
   ['lead-9', 'Chloe', 'Bell', 'chloe@example.com', '(813) 555-2009', 'Website Form', 'stage-9', 'Payment Pending', 'payment_pending', 'low', 'Patio slider service'],
   ['lead-10', 'Benjamin', 'Scott', 'ben@example.com', '(813) 555-2010', 'Google Business Profile', 'stage-11', 'Lost', 'lost', 'normal', 'Storefront door install'],
-].map(([id, firstName, lastName, email, phone, sourceName, pipelineStageId, pipelineStageName, status, priority, serviceRequested], index) => ({
-  id,
-  organizationId,
-  firstName,
-  lastName,
-  email,
-  phone,
-  address: {
-    street: `${450 + index} Orange Ave`,
-    city: 'Tampa',
-    state: 'FL',
-    postalCode: `3361${index}`,
-    country: 'USA',
-  },
-  sourceId: leadSources.find((source) => source.name === sourceName)?.id ?? 'source-1',
-  sourceName,
-  pipelineStageId,
-  pipelineStageName,
-  status,
-  priority,
-  serviceRequested,
-  notes: `${serviceRequested} - needs follow up`,
-  assignedToUserId: index % 2 === 0 ? 'user-dispatch' : ownerUserId,
-  assignedToName: index % 2 === 0 ? 'Maya Lopez' : 'Olivia Rivera',
-  estimatedValue: 350 + index * 280,
-  tags: index % 2 === 0 ? ['priority'] : ['new'],
-  lastContactedAt: iso(-(index + 1)),
-  nextFollowUpAt: iso(index % 5),
-  isDemo: true,
-  createdAt: iso(-40 + index),
-  updatedAt: iso(-index),
-  createdBy: ownerUserId,
-}));
+];
+
+export const leads: Lead[] = leadSeed.map(
+  ([id, firstName, lastName, email, phone, sourceName, pipelineStageId, pipelineStageName, status, priority, serviceRequested], index) => ({
+    id,
+    organizationId,
+    firstName,
+    lastName,
+    email,
+    phone,
+    address: {
+      street: `${450 + index} Orange Ave`,
+      city: 'Tampa',
+      state: 'FL',
+      postalCode: `3361${index}`,
+      country: 'USA',
+    },
+    sourceId: leadSources.find((source) => source.name === sourceName)?.id ?? 'source-1',
+    sourceName,
+    pipelineStageId,
+    pipelineStageName,
+    status,
+    priority,
+    serviceRequested,
+    notes: `${serviceRequested} - needs follow up`,
+    assignedToUserId: index % 2 === 0 ? 'user-dispatch' : ownerUserId,
+    assignedToName: index % 2 === 0 ? 'Maya Lopez' : 'Olivia Rivera',
+    estimatedValue: 350 + index * 280,
+    tags: index % 2 === 0 ? ['priority'] : ['new'],
+    lastContactedAt: iso(-(index + 1)),
+    nextFollowUpAt: iso(index % 5),
+    isDemo: true,
+    createdAt: iso(-40 + index),
+    updatedAt: iso(-index),
+    createdBy: ownerUserId,
+  }),
+);
 
 export const appointments: Appointment[] = [
   {
@@ -592,7 +657,7 @@ const invoicePayments: Payment[] = [
   },
 ];
 
-export const jobs = [
+export const jobs: Job[] = [
   {
     id: 'job-1',
     organizationId,
@@ -688,7 +753,7 @@ export const invoices: Invoice[] = [
     subtotal: 315,
     tax: 22.05,
     total: 337.05,
-    balanceDue: 337.05 - 600 < 0 ? 0 : 337.05 - 600,
+    balanceDue: 0,
     payments: invoicePayments.filter((payment) => payment.invoiceId === 'invoice-1'),
     notes: 'Deposit captured on completion.',
     isDemo: true,
@@ -930,4 +995,3 @@ export const demoDatabase: AppDatabase = {
   notifications,
   authAccounts,
 };
-

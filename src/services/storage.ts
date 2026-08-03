@@ -139,8 +139,8 @@ export function queryTable<K extends DatabaseTableName>(table: K, options: Query
   } = options;
 
   const filtered = getTable(table)
-    .filter((row) => matchesFilter(row as Record<string, unknown>, filters as QueryFilters<Record<string, unknown>>))
-    .filter((row) => matchesSearch(row as Record<string, unknown>, search, searchFields as Array<keyof Record<string, unknown>>));
+    .filter((row) => matchesFilter(row as unknown as Record<string, unknown>, filters as QueryFilters<Record<string, unknown>>))
+    .filter((row) => matchesSearch(row as unknown as Record<string, unknown>, search, searchFields as Array<keyof Record<string, unknown>>));
 
   const sorted = [...filtered];
   if (sortBy) {

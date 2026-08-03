@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthLayout } from '@/components/layout/AuthLayout';
 import { AppShell } from '@/components/layout/AppShell';
@@ -25,7 +26,7 @@ import { TechnicianDetailPage } from '@/pages/TechnicianDetailPage';
 import { TechniciansListPage } from '@/pages/TechniciansListPage';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 
-function AuthRoute({ children }: { children: React.ReactNode }) {
+function AuthRoute({ children }: { children: ReactNode }) {
   return <AuthLayout>{children}</AuthLayout>;
 }
 
