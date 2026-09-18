@@ -35,12 +35,12 @@ class Config:
     BUSINESS_WEBSITE = os.getenv("BUSINESS_WEBSITE", "https://hgdslidingdoor-repair.com")
     BUSINESS_PHONE = os.getenv("BUSINESS_PHONE", "+1-000-000-0000")
     BUSINESS_EMAIL = os.getenv("BUSINESS_EMAIL", "info@hgdslidingdoor-repair.com")
-    BUSINESS_ADDRESS = os.getenv("BUSINESS_ADDRESS", "South Florida, USA (servicio a domicilio)")
+    BUSINESS_ADDRESS = os.getenv("BUSINESS_ADDRESS", "Central Florida, USA (Servicios Comerciales y Residenciales / Commercial & Residential Services)")
     BUSINESS_HOURS = os.getenv(
         "BUSINESS_HOURS",
         "Lunes a Sábado, 8:00 AM - 6:00 PM / Mon-Sat, 8:00 AM - 6:00 PM",
     )
-    SERVICE_AREA = os.getenv("SERVICE_AREA", "South Florida y áreas cercanas")
+    SERVICE_AREA = os.getenv("SERVICE_AREA", "Central Florida (Orlando, Kissimmee, Davenport, Poinciana, Windermere, Clermont, Saint Cloud, etc.)")
 
     # --- Persistencia de citas/leads del chatbot ---
     APPOINTMENTS_DB_PATH = os.getenv("APPOINTMENTS_DB_PATH", "data/appointments.db")
